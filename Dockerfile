@@ -26,9 +26,15 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libpng-dev \
     libpq-dev \
-    libxml2-dev
+    libxml2-dev \
+    libicu-dev
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pgsql session xml 
+RUN docker-php-ext-install opcache && docker-php-ext-enable opcache;
+RUN docker-php-ext-install -j$(nproc) intl;
+
+RUN docker-php-ext-install bcmath intl && docker-php-ext-enable bcmath intl;
+RUN docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enable pdo_mysql;
 
 # habilita instalação do Redis
 RUN pecl install redis-${REDIS_LIB_VERSION} \
